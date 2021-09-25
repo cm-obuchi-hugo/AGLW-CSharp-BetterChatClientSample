@@ -51,6 +51,7 @@ namespace AGLW_CSharp_BetterChatClientSample
         void WriteMessage(byte[] bytes)
         {
             Stream.Write(bytes);
+            Console.WriteLine($"Sent : {Encoder.GetString(bytes)}");
         }
 
         void ReceiveMessage()
@@ -59,7 +60,7 @@ namespace AGLW_CSharp_BetterChatClientSample
             while(Stream.Read(bytes) > 0)
             {
                 string text = Encoder.GetString(bytes);
-                Console.WriteLine(text);
+                Console.WriteLine($"Received : {text}");
             }
         }
 

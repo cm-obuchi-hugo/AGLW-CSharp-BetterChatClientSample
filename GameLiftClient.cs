@@ -112,10 +112,11 @@ namespace AGLW_CSharp_BetterChatClientSample
             Console.WriteLine($"Client : CreatePlayerSessionAsync() start");
             if (gameSession == null) return;
 
-            while(gameSession.Status != GameSessionStatus.ACTIVE)
+            while (gameSession.Status != GameSessionStatus.ACTIVE)
             {
                 Console.WriteLine($"Client : Wait for GameSession to be ACTIVE, Sleep for a while");
                 Thread.Sleep(100);
+                await UpdateGameSession();
             }
 
             var request = new CreatePlayerSessionRequest();
@@ -139,6 +140,33 @@ namespace AGLW_CSharp_BetterChatClientSample
             }
         }
 
+        async private Task UpdateGameSession()
+        {
+            DescribeGameSessionsRequest request = new DescribeGameSessionsRequest();
+            request.GameSessionId = gameSession.GameSessionId;
+
+            Console.WriteLine($"Client : Describe GameSession {gameSession.GameSessionId}...");
+            DescribeGameSessionsResponse response = await gameLiftClient.DescribeGameSessionsAsync(request);
+
+            if (response != null)
+            {
+                if (response.GameSessions.Count == 1)
+                {
+                    // Update GameSession
+                    gameSession = response.GameSessions[0];
+                }
+                else
+                {
+                    Console.WriteLine($"Client : Warning, describe GameSession count {response.GameSessions.Count}");
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Client : Warning, describe GameSession no response");
+            }
+        }
+
+
 
         // Connect to the IP which PlayerSession provides
         // When client connects : 
@@ -158,7 +186,7 @@ namespace AGLW_CSharp_BetterChatClientSample
                 Console.WriteLine($"Client : Connected");
 
                 ChatClient chatClient = new ChatClient(client);
-                
+
                 chatClient.StartClient();
             }
         }
