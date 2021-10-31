@@ -3,7 +3,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Net.Sockets;
-using System.Collections.Concurrent;
 
 using Amazon;
 using Amazon.GameLift;
@@ -33,14 +32,14 @@ namespace AGLW_CSharp_BetterChatClientSample
 
             Console.WriteLine($"Client : playerId {playerId}");
 
-            gameLiftClient = new AmazonGameLiftClient("fake", "fake", new AmazonGameLiftConfig() { ServiceURL = "http://localhost:9080" });
+            // gameLiftClient = new AmazonGameLiftClient("fake", "fake", new AmazonGameLiftConfig() { ServiceURL = "http://localhost:9080" });
 
-            // CognitoAWSCredentials credentials = new CognitoAWSCredentials(
-            //     "Your-Identity-Pool-ID", // Identity pool ID
-            //     RegionEndpoint.APNortheast1 // Region
-            // );
+            CognitoAWSCredentials credentials = new CognitoAWSCredentials(
+                "Your-Identity-Pool-ID", // Identity pool ID
+                RegionEndpoint.APNortheast1 // Region
+            );
 
-            // gameLiftClient = new AmazonGameLiftClient(credentials, RegionEndpoint.APNortheast1);
+            gameLiftClient = new AmazonGameLiftClient(credentials, RegionEndpoint.APNortheast1);
         }
 
         public void Start()

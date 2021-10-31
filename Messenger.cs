@@ -1,9 +1,7 @@
 using System;
 
 using System.Threading;
-using System.Threading.Tasks;
 using System.Net.Sockets;
-using System.Collections.Concurrent;
 
 
 namespace AGLW_CSharp_BetterChatClientSample
