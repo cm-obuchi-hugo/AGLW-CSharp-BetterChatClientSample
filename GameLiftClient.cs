@@ -32,19 +32,19 @@ namespace AGLW_CSharp_BetterChatClientSample
 
             Console.WriteLine($"Client : playerId {playerId}");
 
-            // gameLiftClient = new AmazonGameLiftClient("fake", "fake", new AmazonGameLiftConfig() { ServiceURL = "http://localhost:9080" });
+            gameLiftClient = new AmazonGameLiftClient("fake", "fake", new AmazonGameLiftConfig() { ServiceURL = "http://localhost:9080" });
 
-            CognitoAWSCredentials credentials = new CognitoAWSCredentials(
-                "Your-Identity-Pool-ID", // Identity pool ID
-                RegionEndpoint.APNortheast1 // Region
-            );
+            // CognitoAWSCredentials credentials = new CognitoAWSCredentials(
+            //     "Your-Identity-Pool-ID", // Identity pool ID
+            //     RegionEndpoint.APNortheast1 // Region
+            // );
 
-            gameLiftClient = new AmazonGameLiftClient(credentials, RegionEndpoint.APNortheast1);
+            // gameLiftClient = new AmazonGameLiftClient(credentials, RegionEndpoint.APNortheast1);
         }
 
         public void Start()
         {
-            // Create GameSession(async) -> Create PlayerSession(async) -> Connect ()
+            // SearchGameSessionAsync(async) -> Create GameSession(async) -> Create PlayerSession(async) -> Connect ()
             CreateSessionsAndConnect();
         }
 
@@ -58,6 +58,7 @@ namespace AGLW_CSharp_BetterChatClientSample
             Connect();
         }
 
+        // Search if there's available session to join
         async private Task SearchGameSessionAsync()
         {
             Console.WriteLine($"Client : SearchGameSessionAsync() start");
@@ -78,12 +79,12 @@ namespace AGLW_CSharp_BetterChatClientSample
             }
         }
 
+        // Create a GameSession
         async private Task CreateGameSessionAsync()
         {
             if (gameSession != null) return;
 
             Console.WriteLine($"Client : CreateGameSessionAsync() start");
-            // GameSession gameSession = await CreateGameSessionAsync();
             var request = new CreateGameSessionRequest();
             request.FleetId = "fleet-id";
             request.CreatorId = playerId;
@@ -106,6 +107,7 @@ namespace AGLW_CSharp_BetterChatClientSample
             }
         }
 
+        // Create a PlayerSession from a GameSession
         async private Task CreatePlayerSessionAsync()
         {
             Console.WriteLine($"Client : CreatePlayerSessionAsync() start");
@@ -139,6 +141,7 @@ namespace AGLW_CSharp_BetterChatClientSample
             }
         }
 
+        // Update GameSession until it's active
         async private Task UpdateGameSession()
         {
             DescribeGameSessionsRequest request = new DescribeGameSessionsRequest();

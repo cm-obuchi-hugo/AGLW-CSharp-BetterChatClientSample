@@ -6,11 +6,12 @@ using System.Net.Sockets;
 
 namespace AGLW_CSharp_BetterChatClientSample
 {
-    
+
     class ChatClient
     {
-        public TcpClient ManagedConnection {get; private set;} = null;
-        public Messenger Messenger {get;private set;} = null;
+        public TcpClient ManagedConnection { get; private set; } = null;
+        public Messenger Messenger { get; private set; } = null;
+        
         public ChatClient(TcpClient client)
         {
             ManagedConnection = client;

@@ -17,6 +17,8 @@ namespace AGLW_CSharp_BetterChatClientSample
         public Thread SenderThread { get; private set; } = null;
         public Thread ReceiverThread { get; private set; } = null;
 
+        public string Username { get; private set; } = string.Empty;
+
         public Messenger(NetworkStream stream)
         {
             Stream = stream;
@@ -24,16 +26,21 @@ namespace AGLW_CSharp_BetterChatClientSample
 
         public void StartMessenger()
         {
-            SenderThread = new Thread(() => SendMessage() );
+            Console.WriteLine("Enter your username: ");
+            Username = Console.ReadLine();
+
+            Console.Clear();
+
+            SenderThread = new Thread(() => SendMessage());
             SenderThread.Start();
 
-            ReceiverThread = new Thread(() => ReceiveMessage() );
+            ReceiverThread = new Thread(() => ReceiveMessage());
             ReceiverThread.Start();
         }
 
         void SendMessage()
         {
-            while(true)
+            while (true)
             {
                 SleepForAWhile();
                 MonitorInput();
@@ -43,28 +50,39 @@ namespace AGLW_CSharp_BetterChatClientSample
         void MonitorInput()
         {
             string text = Console.ReadLine();
-            WriteMessage(Encoder.GetBytes(text));
+            string message = new string($"{Username}: {text}");
+            WriteMessage(Encoder.GetBytes(message));
         }
 
         void WriteMessage(byte[] bytes)
         {
+            ClearCurrentConsoleLine();
             Stream.Write(bytes);
-            Console.WriteLine($"Sent : {Encoder.GetString(bytes)}");
+            // Console.WriteLine($"Sent : {Encoder.GetString(bytes)}");
         }
 
         void ReceiveMessage()
         {
             byte[] bytes = new byte[MessageLength];
-            while(Stream.Read(bytes) > 0)
+            while (Stream.Read(bytes) > 0)
             {
                 string text = Encoder.GetString(bytes);
-                Console.WriteLine($"Received : {text}");
+                // Console.WriteLine($"Received : {text}");
+                Console.WriteLine($"{text}");
             }
         }
 
         void SleepForAWhile()
         {
             Thread.Sleep(SleepDuration);
+        }
+
+        void ClearCurrentConsoleLine()
+        {
+            int currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, Console.CursorTop - 1);
+            Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, currentLineCursor - 1);
         }
     }
 }
